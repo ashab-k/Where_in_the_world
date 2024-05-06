@@ -21,11 +21,19 @@ export default async function Home() {
         <Filter />
       </div>
       <div className="grid lg:grid-cols-4 md:grid-cols-2 sm: grid-cols-1 w-[80%] gap-10 p-4 mx-auto ">
-        {data?.countries?.map((item) => {
+        {data?.countries?.map((item, index) => {
           return (
-            <div className="bg-[rgba(43,57,69,1)] w-[100%] flex flex-col">
-              <div className="w-auto max-h-[10rem] overflow-hidden">
-                <img layout="fill" objectFit="cover" src={item.flags.png} />
+            <div
+              key={index}
+              className="bg-[rgba(43,57,69,1)] w-[100%] flex flex-col"
+            >
+              <div className="w-auto lg:h-[10rem] md:h-[12rem] overflow-hidden">
+                <Image
+                  alt={item.name}
+                  width={500}
+                  height={350}
+                  src={item.flags.png}
+                />
               </div>
 
               <p className="my-2 mt-5 px-2 font-bold text-lg mx-4">
