@@ -1,6 +1,8 @@
 import Image from "next/image";
+
 import InputBar from "@/components/InputBar";
 import Filter from "@/components/Filter";
+import Link from "next/link";
 
 async function getCountiresData() {
   const data = await fetch("http://localhost:3000/api/countries");
@@ -8,12 +10,18 @@ async function getCountiresData() {
   if (!data.ok) {
     throw new Error("failed to fetch data");
   }
-
   return data.json();
+}
+
+function handleClick(data) {
+  return data.filter((item) => item.region === "Asia");
 }
 
 export default async function Home() {
   const data = await getCountiresData();
+  let countryData = data.countries;
+  countryData = handleClick(data.countries);
+
   return (
     <main>
       <div className="my-5 flex w-[80%] mx-auto justify-between">
@@ -21,9 +29,10 @@ export default async function Home() {
         <Filter />
       </div>
       <div className="grid lg:grid-cols-4 md:grid-cols-2 sm: grid-cols-1 w-[80%] gap-10 p-4 mx-auto ">
-        {data?.countries?.map((item, index) => {
+        {countryData?.map((item, index) => {
           return (
-            <div
+            <Link
+              href={`/countries/${item.name}`}
               key={index}
               className="bg-[rgba(43,57,69,1)] w-[100%] flex flex-col"
             >
@@ -42,7 +51,7 @@ export default async function Home() {
               <p className="my-2 px-2  mx-4">Population: {item.population}</p>
               <p className="my-2 px-2  mx-4"> Region: {item.region}</p>
               <p className="my-2 px-2  mx-4 mb-5">Capital: {item.capital}</p>
-            </div>
+            </Link>
           );
         })}
       </div>
