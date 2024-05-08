@@ -1,8 +1,6 @@
 "use client";
 import Image from "next/image";
 import { useState, useEffect } from "react";
-
-import InputBar from "@/components/InputBar";
 import Link from "next/link";
 
 async function getCountiresData() {
@@ -20,6 +18,7 @@ export default function Home() {
   const [isOpen, setIsOpen] = useState(false);
   const [countryData, setCountryData] = useState([]);
   const [allCountryData, setAllCountryData] = useState([]);
+  const [input, setInput] = useState("");
   useEffect(() => {
     async function getData() {
       try {
@@ -45,51 +44,85 @@ export default function Home() {
     }
   };
 
+  const findCountry = (event) => {
+    event.preventDefault();
+    if (input) {
+      const filteredData = allCountryData.filter(
+        (item) => item.name.toLowerCase() == input.trim().toLowerCase()
+      );
+      setCountryData(filteredData);
+    }
+  };
+
   return (
     <main>
       <div className="my-5 flex w-[80%] mx-auto justify-between">
-        <InputBar />
+        <div className="bg-[rgba(43,57,69,1)] w-[30%] relative flex justify-around py-3">
+          <Image src="/icons8-search.svg" width={20} height={20} alt="search" />
+          <form className=" w-[70%]" onSubmit={findCountry}>
+            <input
+              type="text"
+              placeholder="Enter country name"
+              className="w-[100%] outline-none bg-transparent text-md text-white"
+              onChange={(e) => setInput(e.target.value)}
+            />
+          </form>
+        </div>
         <div className="flex flex-col  relative">
           <button
-            className="text-lg px-2 py-2 bg-[rgba(43,57,69,1)] w-[10rem]"
+            className="text-[16px] font-light px-2 py-3 bg-[rgba(43,57,69,1)] w-[12rem]"
             onClick={() => setIsOpen(!isOpen)}
           >
-            Fiter by Region{" "}
+            <div className="flex flex-row justify-evenly">
+              <p className="font-semibold">Filter by region</p>
+              <Image
+                src="/icons8-dropdown-50.png"
+                width={20}
+                height={20}
+                alt="dark mode"
+              />
+            </div>
           </button>
 
           {isOpen && (
-            <ul className=" absolute top-[100%] w-[10rem] z-50 bg-[rgba(43,57,69,1)] mt-2 rounded shadow-lg ">
+            <ul className=" absolute top-[100%] w-[12rem] z-50 bg-[rgba(43,57,69,1)] mt-2 rounded shadow-xl ">
               {" "}
               <li
-                className="mb-2 text-lg mx-3"
+                className="py-2  text-lg font-light px-3 hover:bg-[rgba(32,44,55,1)]"
                 onClick={() => handleClick("Asia")}
               >
                 Asia
               </li>
               <li
-                className="mb-2 text-lg mx-3"
+                className="py-2 font-light text-lg px-3  hover:bg-[rgba(32,44,55,1)]"
                 onClick={() => handleClick("Americas")}
               >
                 Americas
               </li>
               <li
-                className="mb-2 text-lg mx-3"
+                className="py-2 font-light text-lg px-3 hover:bg-[rgba(32,44,55,1)]"
                 onClick={() => handleClick("Europe")}
               >
                 Europe
               </li>
               <li
-                className="mb-2 text-lg mx-3"
+                className="py-2 font-light text-lg px-3 hover:bg-[rgba(32,44,55,1)] "
                 onClick={() => handleClick("Africa")}
               >
                 Africa
               </li>
               <li
-                className="mb-2 text-lg mx-3"
+                className="py-2 font-light text-lg px-3 hover:bg-[rgba(32,44,55,1)]"
                 onClick={() => handleClick("Oceania")}
               >
                 Oceania
               </li>{" "}
+              <li
+                className="py-2 font-light text-lg px-3 hover:bg-[rgba(32,44,55,1)]"
+                onClick={() => handleClick()}
+              >
+                All
+              </li>
             </ul>
           )}
         </div>
