@@ -1,7 +1,8 @@
+"use client";
 import Image from "next/image";
+import { useState, useEffect } from "react";
 
 import InputBar from "@/components/InputBar";
-import Filter from "@/components/Filter";
 import Link from "next/link";
 
 async function getCountiresData() {
@@ -10,23 +11,88 @@ async function getCountiresData() {
   if (!data.ok) {
     throw new Error("failed to fetch data");
   }
-  return data.json();
+
+  const response = await data.json();
+  return response.countries;
 }
 
-function handleClick(data) {
-  return data.filter((item) => item.region === "Asia");
-}
+export default function Home() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [countryData, setCountryData] = useState([]);
+  const [allCountryData, setAllCountryData] = useState([]);
+  useEffect(() => {
+    async function getData() {
+      try {
+        const data = await getCountiresData();
+        setAllCountryData(data);
+        setCountryData(data);
+        console.log(data);
+      } catch (error) {
+        console.error("failed to fetch data", error);
+      }
+    }
+    getData();
+  }, []);
 
-export default async function Home() {
-  const data = await getCountiresData();
-  let countryData = data.countries;
-  countryData = handleClick(data.countries);
+  const handleClick = (region) => {
+    if (region) {
+      const filteredData = allCountryData.filter(
+        (item) => item.region === region
+      );
+      setCountryData(filteredData);
+    } else {
+      setCountryData(allCountryData);
+    }
+  };
 
   return (
     <main>
       <div className="my-5 flex w-[80%] mx-auto justify-between">
         <InputBar />
-        <Filter />
+        <div className="flex flex-col  relative">
+          <button
+            className="text-lg px-2 py-2 bg-[rgba(43,57,69,1)] w-[10rem]"
+            onClick={() => setIsOpen(!isOpen)}
+          >
+            Fiter by Region{" "}
+          </button>
+
+          {isOpen && (
+            <ul className=" absolute top-[100%] w-[10rem] z-50 bg-[rgba(43,57,69,1)] mt-2 rounded shadow-lg ">
+              {" "}
+              <li
+                className="mb-2 text-lg mx-3"
+                onClick={() => handleClick("Asia")}
+              >
+                Asia
+              </li>
+              <li
+                className="mb-2 text-lg mx-3"
+                onClick={() => handleClick("Americas")}
+              >
+                Americas
+              </li>
+              <li
+                className="mb-2 text-lg mx-3"
+                onClick={() => handleClick("Europe")}
+              >
+                Europe
+              </li>
+              <li
+                className="mb-2 text-lg mx-3"
+                onClick={() => handleClick("Africa")}
+              >
+                Africa
+              </li>
+              <li
+                className="mb-2 text-lg mx-3"
+                onClick={() => handleClick("Oceania")}
+              >
+                Oceania
+              </li>{" "}
+            </ul>
+          )}
+        </div>
       </div>
       <div className="grid lg:grid-cols-4 md:grid-cols-2 sm: grid-cols-1 w-[80%] gap-10 p-4 mx-auto ">
         {countryData?.map((item, index) => {

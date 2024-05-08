@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { resolve } from "styled-jsx/css";
 import Link from "next/link";
 
 export async function getCountryByName(name) {
