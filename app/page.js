@@ -56,8 +56,8 @@ export default function Home() {
 
   return (
     <main>
-      <div className="my-5 flex w-[80%] mx-auto justify-between">
-        <div className="bg-[rgba(43,57,69,1)] w-[30%] relative flex justify-around py-3">
+      <div className="my-5 flex flex-col sm:flex-row  w-[80%] mx-auto justify-between">
+        <div className="bg-[rgba(43,57,69,1)] w-[100%] sm:w-[30%] my-3 relative flex justify-around py-3">
           <Image src="/icons8-search.svg" width={20} height={20} alt="search" />
           <form className=" w-[70%]" onSubmit={findCountry}>
             <input
